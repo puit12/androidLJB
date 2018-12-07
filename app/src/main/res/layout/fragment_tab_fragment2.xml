@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TabFragment2">
+
+    <!-- TODO: Update blank fragment layout -->
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextureView
+            android:id="@+id/hiddensurface"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+        <EditText
+            android:id="@+id/idInput"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="151dp"
+            android:layout_gravity="bottom"
+            android:hint="ID" />
+
+        <EditText
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:id="@+id/passwordInput"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom"
+            android:hint="Password"
+            android:layout_below="@+id/idInput" />
+
+        <Button
+            android:id="@+id/recordStart"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/passwordInput"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="0dp"
+            android:text="Connect" />
+    </RelativeLayout>
+
+
+
+</FrameLayout>
