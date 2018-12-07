@@ -31,7 +31,7 @@ public class TabFragment1 extends Fragment {
     int count = 0;
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String CLIENT_ID = "clientid";
+    private static final String CLIENT_ID = "elezi66dku";
     // 1. "내 애플리케이션"에서 Client ID를 확인해서 이곳에 적어주세요.
     // 2. build.gradle (Module:app)에서 패키지명을 실제 개발자센터 애플리케이션 설정의 '안드로이드 앱 패키지 이름'으로 바꿔 주세요
 
