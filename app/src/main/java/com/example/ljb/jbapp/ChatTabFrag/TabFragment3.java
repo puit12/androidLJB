@@ -1,10 +1,8 @@
-package com.example.ljb.jbapp;
+package com.example.ljb.jbapp.ChatTabFrag;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -13,84 +11,73 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.ljb.jbapp.utils.AudioWriterPCM;
+import com.example.ljb.jbapp.R;
+import com.example.ljb.jbapp.Service.SaveService;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.naver.speech.clientapi.SpeechRecognitionResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class TabFragment3 extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private Button resultBtn;
-    private Button countBtn;
+    private Button saveSSBtn;
+    private Button saveOriBtn;
     private TextView resultTextview;
     UploadEC2 uploadEC2;
+    SaveService saveServiceService;
     ResultHandler resultHandler;
     PieChart pieChart;
 
-    public TabFragment3() {
-        // Required empty public constructor
-    }
 
+    public TabFragment3() {
+        resultHandler = new ResultHandler(this);
+        saveServiceService = new SaveService();
+        uploadEC2 = new UploadEC2();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v =  inflater.inflate(R.layout.fragment_tab_fragment3, container, false);
-        resultBtn = (Button) v.findViewById(R.id.resultBtn);
-        countBtn =(Button) v.findViewById(R.id.countBtn);
+        final View view = inflater.inflate(R.layout.tab_fragment3, container, false);
 
-        resultTextview = (TextView) v.findViewById(R.id.resultTextview);
-        resultHandler = new ResultHandler(this);
+        initUI(view);
 
-        pieChart = (PieChart)v.findViewById(R.id.piechart);
-        pieChart.setDragDecelerationFrictionCoef(0.95f);
-
-        pieChart.setDrawHoleEnabled(false);
-        pieChart.setHoleColor(Color.WHITE);
-        pieChart.setTransparentCircleRadius(61f);
-
-
-        pieChart.setUsePercentValues(true);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setExtraOffsets(5,10,5,5);
-
-        uploadEC2 = new UploadEC2();
-
+        saveOriBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveServiceService.original(resultTextview.getText().toString());
+            }
+        });
         resultBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             uploadEC2.resultSentenceFromEC2(getActivity(),resultHandler,"returnresult");
+                uploadEC2.resultSentenceFromEC2(getActivity(), resultHandler, "returnresult");
             }
         });
-
-        countBtn.setOnClickListener(new View.OnClickListener() {
+        saveSSBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadEC2.resultWordCountFromEC2(getActivity(),resultHandler,"returncount");
+                try {
+                    saveServiceService.screenshot(view);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
-
-        return v;
+        return view;
     }
-
-    // TODO: Rename method, update argument and hook method into UI event
 
     @Override
     public void onDetach() {
@@ -98,16 +85,6 @@ public class TabFragment3 extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -139,6 +116,7 @@ public class TabFragment3 extends Fragment {
             case 1:
                 String result = uploadEC2.returnResult();
                 resultTextview.setText(result);
+                uploadEC2.resultWordCountFromEC2(getActivity(), resultHandler, "returncount");
                 break;
             case 2:
                 String count = uploadEC2.returnResult();
@@ -147,30 +125,48 @@ public class TabFragment3 extends Fragment {
         }
     }
 
+
     private void jsonParsing(String json) throws JSONException {
         ArrayList<PieEntry> yValues = new ArrayList<PieEntry>();
 
         JSONArray jsonArray = new JSONArray(json);
         JSONArray jsonArray2;
 
-        for(int i = 0; i < jsonArray.length(); i++){
+        for (int i = 0; i < jsonArray.length(); i++) {
             jsonArray2 = jsonArray.getJSONArray(i);
             String word = jsonArray2.getString(0);
             int count = jsonArray2.getInt(1);
-            yValues.add(new PieEntry(count,word));
+            yValues.add(new PieEntry(count, word));
         }
 
-        pieChart.animateY(1000,Easing.EasingOption.EaseInOutCubic); //애니메이션
-
-        PieDataSet dataSet = new PieDataSet(yValues,"Countries");
-        dataSet.setSliceSpace(3f);
-        dataSet.setSelectionShift(5f);
-        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-
+        PieDataSet dataSet = new PieDataSet(yValues, "Countries");
         PieData data = new PieData((dataSet));
-        data.setValueTextSize(10f);
-        data.setValueTextColor(Color.YELLOW);
-
-        pieChart.setData(data);
+        createChart(dataSet, data);
     }
+
+    private void initUI(View view) {
+        resultBtn = (Button) view.findViewById(R.id.resultBtn);
+        saveSSBtn = (Button) view.findViewById(R.id.saveScreenshot);
+        saveOriBtn = (Button) view.findViewById(R.id.saveOriginal);
+        resultTextview = (TextView) view.findViewById(R.id.resultTextview);
+        pieChart = (PieChart) view.findViewById(R.id.piechart);
+    }
+
+    private void createChart(PieDataSet pieDataSet, PieData pieData) {
+        pieChart.setDragDecelerationFrictionCoef(0.95f);
+        pieChart.setHoleColor(Color.BLACK);
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setUsePercentValues(true);
+        pieChart.getLegend().setEnabled(false);
+        pieChart.animateY(1000, Easing.EasingOption.EaseInOutCubic);
+
+        pieDataSet.setSliceSpace(3f);
+        pieDataSet.setSelectionShift(5f);
+        pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+
+        pieData.setValueTextSize(10f);
+        pieData.setValueTextColor(Color.YELLOW);
+        pieChart.setData(pieData);
+    }
+
 }

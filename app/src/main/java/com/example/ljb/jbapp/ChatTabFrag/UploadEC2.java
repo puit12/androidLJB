@@ -1,6 +1,5 @@
-package com.example.ljb.jbapp;
+package com.example.ljb.jbapp.ChatTabFrag;
 
-import android.app.Notification;
 import android.content.Context;
 import android.os.Message;
 import android.widget.Toast;
@@ -8,7 +7,10 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
 import android.os.Handler;
+
+import com.example.ljb.jbapp.Service.UploadService;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -16,8 +18,8 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
+
 /**
  * Created by LJB on 2018-07-13.
  */
@@ -27,14 +29,14 @@ public class UploadEC2 {
     UploadService service;
     String resultLine;
 
-    protected UploadEC2(){
+    protected UploadEC2() {
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .readTimeout(50, TimeUnit.SECONDS)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .build();
         retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
-                .baseUrl("awsurl:5000")
+                .baseUrl("http://:5000")
                 .build();
 
         service = retrofit.create(UploadService.class);
@@ -53,8 +55,7 @@ public class UploadEC2 {
                 try {
                     String resultLine = res.string();
                     Toast.makeText(context, resultLine, Toast.LENGTH_LONG).show();
-                }
-               catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -77,10 +78,9 @@ public class UploadEC2 {
                 ResponseBody res = response.body();
                 try {
                     resultLine = res.string();
-                    Message msg = Message.obtain(handler,1);
+                    Message msg = Message.obtain(handler, 1);
                     msg.sendToTarget();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -102,10 +102,9 @@ public class UploadEC2 {
                 ResponseBody res = response.body();
                 try {
                     resultLine = res.string();
-                    Message msg = Message.obtain(handler,2);
+                    Message msg = Message.obtain(handler, 2);
                     msg.sendToTarget();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -116,7 +115,7 @@ public class UploadEC2 {
         });
     }
 
-    protected String returnResult(){
+    protected String returnResult() {
         return resultLine;
     }
 

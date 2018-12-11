@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TabFragment3">
+    tools:context=".ChatTabFrag.TabFragment3">
 
     <!-- TODO: Update blank fragment layout -->
     <Button
@@ -12,30 +12,43 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/str_start" />
+        android:background="@drawable/curcle_stroke"
+        android:text="분석 시작" />
 
     <Button
-        android:id="@+id/countBtn"
+        android:id="@+id/saveScreenshot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/resultBtn"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="64dp"
-        android:text="test" />
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/curcle_stroke"
+        android:text="결과 저장" />
+
+    <Button
+        android:id="@+id/saveOriginal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/curcle_stroke"
+        android:text="원본 저장" />
 
     <TextView
         android:id="@+id/resultTextview"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="51dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="0dp" />
 
     <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/piechart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/piechart">
+        android:layout_above="@id/resultTextview"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="191dp">
 
     </com.github.mikephil.charting.charts.PieChart>
 </RelativeLayout>

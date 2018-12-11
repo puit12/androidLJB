@@ -1,9 +1,12 @@
-package com.example.ljb.jbapp;
+package com.example.ljb.jbapp.ChatTabFrag;
 
-import android.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import com.example.ljb.jbapp.ChatTabFrag.TabFragment1;
+import com.example.ljb.jbapp.ChatTabFrag.TabFragment2;
+import com.example.ljb.jbapp.ChatTabFrag.TabFragment3;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
     int tabCount;
@@ -21,7 +24,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        switch (position){
+        switch (position) {
             case 0:
                 TabFragment1 tab1 = new TabFragment1();
                 return tab1;
@@ -32,8 +35,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 TabFragment3 tab3 = new TabFragment3();
                 return tab3;
 
-                default:
-                    return null;
+            default:
+                return null;
         }
     }
 

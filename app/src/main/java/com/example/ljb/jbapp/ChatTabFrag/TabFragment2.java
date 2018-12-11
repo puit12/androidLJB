@@ -1,14 +1,9 @@
-package com.example.ljb.jbapp;
+package com.example.ljb.jbapp.ChatTabFrag;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.SurfaceTexture;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
@@ -16,7 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.ljb.jbapp.R;
 
 import org.videolan.libvlc.IVLCVout;
 import org.videolan.libvlc.LibVLC;
@@ -30,7 +29,7 @@ public class TabFragment2 extends Fragment implements IVLCVout.Callback {
     private LibVLC libvlc;
     private MediaPlayer mMediaPlayer = null;
     private String path = "";
-
+    private Button button;
     private int mVideoWidth;
 
     private EditText idText;
@@ -39,44 +38,37 @@ public class TabFragment2 extends Fragment implements IVLCVout.Callback {
     private OnFragmentInteractionListener mListener;
 
     public TabFragment2() {
-        // Required empty public constructor
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_tab_fragment2, container, false);
-        // Inflate the layout for this fragment
-
-        mTexture = (TextureView) v.findViewById(R.id.hiddensurface);
-        Button button = (Button)v.findViewById(R.id.recordStart);
-        idText = (EditText) v.findViewById(R.id.idInput);
-        pwText = (EditText) v.findViewById(R.id.passwordInput);
+        View view = inflater.inflate(R.layout.tab_fragment2, container, false);
+        initUI(view);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String id = idText.getText().toString();
                 String pw = pwText.getText().toString();
-                path = "rtsp://"+ id +":" + pw +"@118.222.51.157:7777/1";
+                path = "rtsp://" + id + ":" + pw + "@118.222.51.157:7777/1";
                 createPlayer(path);
+                idText.setText(null);
+                pwText.setText(null);
             }
         });
 
-        return v;
-
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener  {
-        // TODO: Update argument type and name
+    public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
 
@@ -90,7 +82,7 @@ public class TabFragment2 extends Fragment implements IVLCVout.Callback {
 
     }
 
-    //VLC 플레이어 실행
+    //VLC PLAYER EXECUTE
     private void createPlayer(String media) {
         releasePlayer();
 
@@ -101,25 +93,20 @@ public class TabFragment2 extends Fragment implements IVLCVout.Callback {
 
         // Create LibVLC
         ArrayList<String> options = new ArrayList<>();
-        //options.add("--subsdec-encoding <encoding>");
         options.add("--aout=opensles");
-        options.add("--audio-time-stretch"); // time stretching
+        options.add("--audio-time-stretch");
         options.add("--rtsp-tcp");
         options.add("--file-caching=2000");
         options.add("-vvv");
         libvlc = new LibVLC(getActivity(), options);
 
-        // Create media player
         mMediaPlayer = new MediaPlayer(libvlc);
 
-        // Set up video output
         final IVLCVout vout = mMediaPlayer.getVLCVout();
         vout.setVideoView(mTexture);
-        vout.setWindowSize(mVideoWidth, mVideoWidth*9/16);
+        vout.setWindowSize(mVideoWidth, mVideoWidth * 9 / 16);
         vout.addCallback(this);
         vout.attachViews();
-
-
 
         Media m = new Media(libvlc, Uri.parse(media));
         int cache = 500;
@@ -132,15 +119,14 @@ public class TabFragment2 extends Fragment implements IVLCVout.Callback {
         m.addOption(":fullscreen");
 
 
-        mTexture.setLayoutParams(new FrameLayout.LayoutParams(mVideoWidth,mVideoWidth*9/16));
-        Toast.makeText(getContext(), mTexture.getWidth() +" "+ mTexture.getHeight(), Toast.LENGTH_LONG).show();
+        mTexture.setLayoutParams(new FrameLayout.LayoutParams(mVideoWidth, mVideoWidth * 9 / 16));
+        Toast.makeText(getContext(), mTexture.getWidth() + " " + mTexture.getHeight(), Toast.LENGTH_LONG).show();
 
         mMediaPlayer.setMedia(m);
         mMediaPlayer.play();
-
     }
 
-    //플레이어 종료
+    // PLAYER EXIT
     private void releasePlayer() {
         if (libvlc == null)
             return;
@@ -154,7 +140,6 @@ public class TabFragment2 extends Fragment implements IVLCVout.Callback {
         mVideoWidth = 0;
     }
 
-
     @Override
     public void onPause() {
         super.onPause();
@@ -164,5 +149,12 @@ public class TabFragment2 extends Fragment implements IVLCVout.Callback {
     public void onDestroy() {
         super.onDestroy();
         releasePlayer();
+    }
+
+    private void initUI(View view) {
+        mTexture = (TextureView) view.findViewById(R.id.hiddensurface);
+        button = (Button) view.findViewById(R.id.recordStart);
+        idText = (EditText) view.findViewById(R.id.idInput);
+        pwText = (EditText) view.findViewById(R.id.passwordInput);
     }
 }

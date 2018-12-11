@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TabFragment2">
+    tools:context=".ChatTabFrag.TabFragment2">
 
     <!-- TODO: Update blank fragment layout -->
     <FrameLayout
@@ -19,24 +19,27 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom">
+
         <EditText
             android:id="@+id/idInput"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="151dp"
             android:layout_gravity="bottom"
+            android:layout_marginTop="151dp"
             android:hint="ID" />
 
         <EditText
+            android:id="@+id/passwordInput"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:id="@+id/passwordInput"
+            android:layout_below="@+id/idInput"
             android:layout_centerHorizontal="true"
             android:layout_gravity="bottom"
-            android:hint="Password"
-            android:layout_below="@+id/idInput" />
+            android:hint="Password" />
 
         <Button
             android:id="@+id/recordStart"
@@ -45,9 +48,9 @@
             android:layout_below="@+id/passwordInput"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="0dp"
+            android:background="@drawable/curcle_stroke"
             android:text="Connect" />
     </RelativeLayout>
 
 
-
-</FrameLayout>
+</RelativeLayout>

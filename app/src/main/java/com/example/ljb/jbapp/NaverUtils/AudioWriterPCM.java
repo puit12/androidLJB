@@ -1,4 +1,4 @@
-package com.example.ljb.jbapp.utils;
+package com.example.ljb.jbapp.NaverUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -49,7 +49,7 @@ public class AudioWriterPCM {
 
         ByteBuffer buffer = ByteBuffer.allocate(data.length * 2);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
-        for(int i = 0; i < data.length; i++) {
+        for (int i = 0; i < data.length; i++) {
             buffer.putShort(data[i]);
         }
         buffer.flip();
